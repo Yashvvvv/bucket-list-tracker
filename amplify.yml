@@ -4,11 +4,12 @@ backend:
     build:
       commands:
         - npm ci --cache .npm --prefer-offline
-        - '# Non-interactive pull (no prompts)'
-        - export AMPLIFY="{\"appId\":\"${AMPLIFY_APP_ID}\",\"envName\":\"${AMPLIFY_ENV_NAME:-staging}\"}"
-        - export PROVIDERS="{\"awscloudformation\":{\"configLevel\":\"project\",\"useProfile\":false,\"region\":\"eu-north-1\"}}"
-        - export FRONTEND="{\"frontend\":\"javascript\",\"framework\":\"react\",\"config\":{\"SourceDir\":\"src\",\"DistributionDir\":\"dist\",\"BuildCommand\":\"npm run build\",\"StartCommand\":\"npm run dev\"}}"
-        - npx amplify pull --yes --amplify "$AMPLIFY" --providers "$PROVIDERS" --frontend "$FRONTEND"
+        - '# Ensure Node runtime (optional diagnostics)'
+        - node -v
+        - npm -v
+        - '# Non-interactive pull (no prompts) — rely on Console IAM role creds'
+        - export AWS_REGION=${AWS_REGION:-eu-north-1}
+        - npx amplify pull --yes --appId "${AMPLIFY_APP_ID}" --envName "${AMPLIFY_ENV_NAME:-staging}"
         - '# Do not push backend from Console build; provision outside of CI'
   runtime-versions:
     node: 20
