@@ -1,0 +1,33 @@
+{
+  "Auth": {
+    "Cognito": {
+      "userPoolId": "us-east-1_XXXXXXXXX",
+      "userPoolClientId": "xxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "identityPoolId": "us-east-1:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "loginWith": {
+        "oauth": {
+          "domain": "your-domain.auth.us-east-1.amazoncognito.com",
+          "scopes": ["openid", "email", "profile"],
+          "redirectSignIn": ["http://localhost:5173/"],
+          "redirectSignOut": ["http://localhost:5173/"],
+          "responseType": "code"
+        },
+        "username": true,
+        "email": true
+      }
+    }
+  },
+  "API": {
+    "GraphQL": {
+      "endpoint": "https://xxxxxxxxxxxxxxxxxxxxxxxxxx.appsync-api.us-east-1.amazonaws.com/graphql",
+      "region": "us-east-1",
+      "defaultAuthMode": "userPool"
+    }
+  },
+  "Storage": {
+    "S3": {
+      "bucket": "your-bucket-name",
+      "region": "us-east-1"
+    }
+  }
+}
