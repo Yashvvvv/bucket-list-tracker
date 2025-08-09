@@ -10,7 +10,8 @@
 
 #### 1. Fixed Missing Backend CLI Dependency
 - **Issue**: `ampx` command not found during build
-- **Solution**: Added `@aws-amplify/backend-cli@^1.16.1` to devDependencies
+- **Solution**: Added `@aws-amplify/backend-cli@^1.8.0` to devDependencies (corrected version)
+- **Previous Error**: Used non-existent version `^1.16.1`
 - **Impact**: Enables proper Amplify Gen 2 pipeline deployment
 
 #### 2. Added TypeScript Support
@@ -71,6 +72,8 @@ If deployment fails:
 
 **Previous Deployment Issues (Resolved)**:
 - ❌ Missing `@aws-amplify/backend-cli` dependency
+- ❌ Used incorrect version `^1.16.1` (doesn't exist)
+- ✅ Corrected to version `^1.8.0` (latest available)
 - ❌ TypeScript compilation errors
 - ❌ Incorrect amplify.yml configuration
 
