@@ -17,7 +17,7 @@ backend:
         - npm ci --cache .npm --prefer-offline
         - '# Non-interactive pull using Amplify Console creds (no access keys in yml)'
         - export AWS_REGION=${AWS_REGION:-eu-north-1}
-        - npx amplify pull --yes --appId "${AMPLIFY_APP_ID}" --envName "${AMPLIFY_ENV_NAME}"
+        - npx amplify pull --yes --appId "${AWS_APP_ID}" --envName "${AMPLIFY_ENV_NAME}"
         - '# Do not push backend from Console build; provision outside of CI'
 frontend:
   phases:
