@@ -399,38 +399,138 @@ VITE_AWS_USER_POOL_WEB_CLIENT_ID=your_client_id
 
 ## 🚀 Deployment
 
-### Automated Deployment with AWS Amplify
+### Automated Deployment with AWS Amplify Gen 2
 
-1. **Connect Repository**
+This project uses AWS Amplify Gen 2 for streamlined deployment with the new `@aws-amplify/backend-cli` (ampx).
+
+#### Prerequisites
+- AWS Account with proper permissions
+- GitHub repository connected to Amplify Console
+- Node.js 20+ environment
+
+#### Build Configuration
+
+The `amplify.yml` file is configured for Amplify Gen 2:
+
+```yaml
+version: 1
+env:
+  runtime-versions:
+    nodejs: 20
+backend:
+  phases:
+    build:
+      commands:
+        - nvm use 20
+        - npm ci --cache .npm --prefer-offline
+        - npx ampx pipeline-deploy --branch "$AWS_BRANCH" --app-id "$AWS_APP_ID"
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - nvm use 20
+        - npm ci --cache .npm --prefer-offline
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+```
+
+#### Key Dependencies for Deployment
+
+Ensure these packages are in your `package.json`:
+
+```json
+{
+  "dependencies": {
+    "@aws-amplify/backend": "^1.16.1",
+    "aws-amplify": "^6.15.5"
+  },
+  "devDependencies": {
+    "@aws-amplify/backend-cli": "^1.16.1",
+    "typescript": "^5.7.2"
+  }
+}
+```
+
+#### Deployment Steps
+
+1. **Connect Repository to Amplify Console**
    - Go to AWS Amplify Console
+   - Select "Host web app"
    - Connect your GitHub repository
    - Grant necessary permissions
 
 2. **Configure Build Settings**
-   ```yaml
-   version: 1
-   frontend:
-     phases:
-       preBuild:
-         commands:
-           - npm ci --cache .npm --prefer-offline
-       build:
-         commands:
-           - npm run build
-     artifacts:
-       baseDirectory: dist
-       files:
-         - '**/*'
-     cache:
-       paths:
-         - node_modules/**/*
-         - .npm/**/*
-   ```
+   - Use the provided `amplify.yml` configuration
+   - Ensure Node.js 20 is selected as runtime
+   - Enable auto-deployment on git push
 
 3. **Deploy**
-   - Automatic deployment on git push
-   - Preview deployments for pull requests
-   - Custom domain configuration available
+   ```bash
+   # Commit and push changes
+   git add .
+   git commit -m "Deploy: Updated configuration for Amplify Gen 2"
+   git push origin main
+   ```
+
+#### Local Testing Commands
+
+```bash
+# Test ampx command locally
+npx ampx --version
+
+# Run sandbox environment
+npm run ampx:sandbox
+
+# Deploy pipeline locally (if configured)
+npm run ampx:deploy
+```
+
+### Troubleshooting Deployment Issues
+
+#### Common Issue: "npm error could not determine executable to run"
+
+**Problem**: The `ampx` command is not found during build.
+
+**Solution**:
+1. Verify `@aws-amplify/backend-cli` is in `devDependencies`
+2. Ensure `npm ci` runs before `npx ampx` command
+3. Check Node.js version is 20+
+
+**Quick Fix**:
+```bash
+# Install missing dependency
+npm install --save-dev @aws-amplify/backend-cli@^1.16.1
+
+# Commit and redeploy
+git add package.json package-lock.json
+git commit -m "fix: add missing backend-cli dependency"
+git push origin main
+```
+
+#### TypeScript Compilation Issues
+
+**Problem**: Backend TypeScript files fail to compile.
+
+**Solution**:
+1. Ensure `typescript` is installed as dev dependency
+2. Add proper `tsconfig.json` configuration
+3. Verify all backend imports use `.js` extensions
+
+#### Build Cache Issues
+
+**Problem**: Stale cache causing build failures.
+
+**Solution**:
+1. Use `npm ci --cache .npm --prefer-offline` for clean installs
+2. Clear Amplify build cache in console if needed
+3. Delete and recreate app if persistent issues
+
+For more detailed troubleshooting, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 
 ### Manual Deployment
 
